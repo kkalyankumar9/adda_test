@@ -1,11 +1,11 @@
 const request = require('supertest');
+const { app, bookingSystem } = require('./index');
 
-const { app, bookings } = require('./index'); 
 describe('POST /book', () => {
   beforeEach(() => {
     // Clear the bookings object before each test
-    for (let key in bookings) {
-      delete bookings[key];
+    for (let key in bookingSystem.bookings) {
+      delete bookingSystem.bookings[key];
     }
   });
 
