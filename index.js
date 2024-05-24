@@ -1,8 +1,5 @@
-const express = require("express");
-const app = express();
-app.use(express.json());
-require('dotenv').config();
-const PORT = 8000;
+// BookingSystem.js
+const readline = require("readline");
 
 class BookingSystem {
   constructor() {
@@ -48,7 +45,46 @@ class BookingSystem {
     return true;
   }
 
-  bookFacility(facility, date, startHour, endHour) {
+  async bookFacility() {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    return new Promise((resolve) => {
+      rl.question("Enter facility name: ", (facility) => {
+        if (!this.facilities[facility]) {
+          console.log("Invalid facility");
+          rl.close();
+          resolve("Invalid facility");
+          return;
+        }
+
+        rl.question("Enter date (YYYY-MM-DD): ", (date) => {
+          const currentDate = new Date();
+          const inputDate = new Date(date);
+
+          if (inputDate <= currentDate) {
+            console.log("Date must be greater than the current date");
+            rl.close();
+            resolve("Date must be greater than the current date");
+            return;
+          }
+
+          rl.question("Enter start hour: ", (startHour) => {
+            rl.question("Enter end hour: ", (endHour) => {
+              const result = this.bookFacilitySync(facility, date, parseInt(startHour), parseInt(endHour));
+              console.log(result);
+              rl.close();
+              resolve(result);
+            });
+          });
+        });
+      });
+    });
+  }
+
+  bookFacilitySync(facility, date, startHour, endHour) {
     if (!this.facilities[facility]) {
       return "Invalid facility";
     }
@@ -74,26 +110,4 @@ class BookingSystem {
   }
 }
 
-// Create an instance of the BookingSystem class
-const bookingSystem = new BookingSystem();
-
-// Endpoint to handle booking requests
-app.post("/book", (req, res) => {
-  const { facility, date, startHour, endHour } = req.body;
-
-  if (!bookingSystem.facilities[facility]) { 
-    return res.status(400).send("Invalid facility"); 
-  }
-  
-  const result = bookingSystem.bookFacility(facility, date, startHour, endHour);
-  res.send(result);
-});
-
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-   
-    console.log(`Server is running on port ${PORT}`);
-  });
-}
-
-module.exports = { app, bookingSystem }; 
+module.exports = BookingSystem;
