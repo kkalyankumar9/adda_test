@@ -5,7 +5,11 @@ node.js,unit Test(jest)
 ## Deployed link
 https://adda-test.onrender.com
 
-## Code Run locally
+## Run Locally
 
+### Installation
+
+```bash
 npm install
+---bash
 npm run book
