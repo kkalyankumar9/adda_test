@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server": "nodemon index.js",
+    "server": "nodemon  index.js",
     "start": "NODE_ENV=production node index.js",
     "dev": "NODE_ENV=development node index.js",
-    "test": "set NODE_ENV=test && jest"
+    "test": "set NODE_ENV=test && jest",
+    "book": "nodemon runBookingSystem.js"
   },
   "keywords": [],
   "author": "",

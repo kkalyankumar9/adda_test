@@ -1,4 +1,4 @@
-// BookingSystem.js
+
 const readline = require("readline");
 
 class BookingSystem {
