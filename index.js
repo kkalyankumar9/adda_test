@@ -1,16 +1,13 @@
-
 const readline = require("readline");
 
 class BookingSystem {
   constructor() {
     this.facilities = {
-      "Clubhouse": [
+      Clubhouse: [
         { start: 10, end: 16, rate: 100 },
-        { start: 16, end: 22, rate: 500 }
+        { start: 16, end: 22, rate: 500 },
       ],
-      "Tennis Court": [
-        { start: 0, end: 24, rate: 50 }
-      ]
+      "Tennis Court": [{ start: 0, end: 24, rate: 50 }],
     };
     this.bookings = {};
   }
@@ -48,7 +45,7 @@ class BookingSystem {
   async bookFacility() {
     const rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout
+      output: process.stdout,
     });
 
     return new Promise((resolve) => {
@@ -61,6 +58,15 @@ class BookingSystem {
         }
 
         rl.question("Enter date (YYYY-MM-DD): ", (date) => {
+          if (!this.isValidDateFormat(date)) {
+            console.log(
+              "Invalid date format. Please enter date in YYYY-MM-DD format."
+            );
+            rl.close();
+            resolve("Invalid date format");
+            return;
+          }
+
           const currentDate = new Date();
           const inputDate = new Date(date);
 
@@ -72,9 +78,33 @@ class BookingSystem {
           }
 
           rl.question("Enter start hour: ", (startHour) => {
+            startHour = parseInt(startHour);
+            if (!this.isValidHour(startHour)) {
+              console.log("Invalid start hour");
+              rl.close();
+              resolve("Invalid start hour");
+              return;
+            }
+
             rl.question("Enter end hour: ", (endHour) => {
-              const result = this.bookFacilitySync(facility, date, parseInt(startHour), parseInt(endHour));
-              console.log(result);
+              endHour = parseInt(endHour);
+              if (!this.isValidHour(endHour) || endHour <= startHour) {
+                console.log(
+                  "Invalid end hour or end hour must be greater than start hour"
+                );
+                rl.close();
+                resolve(
+                  "Invalid end hour or end hour must be greater than start hour"
+                );
+                return;
+              }
+
+              const result = this.bookFacilitySync(
+                facility,
+                date,
+                startHour,
+                endHour
+              );
               rl.close();
               resolve(result);
             });
@@ -87,6 +117,15 @@ class BookingSystem {
   bookFacilitySync(facility, date, startHour, endHour) {
     if (!this.facilities[facility]) {
       return "Invalid facility";
+    }
+
+    if (
+      !this.isValidDateFormat(date) ||
+      !this.isValidHour(startHour) ||
+      !this.isValidHour(endHour) ||
+      endHour <= startHour
+    ) {
+      return "Invalid input";
     }
 
     if (!this.isAvailable(facility, date, startHour, endHour)) {
@@ -107,6 +146,15 @@ class BookingSystem {
 
     const cost = this.calculateCost(facility, startHour, endHour);
     return `Booked, Rs. ${cost}`;
+  }
+
+  isValidDateFormat(dateString) {
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    return datePattern.test(dateString);
+  }
+
+  isValidHour(hour) {
+    return Number.isInteger(hour) && hour >= 0 && hour < 24;
   }
 }
 
