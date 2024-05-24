@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-
+require('dotenv').config();
 const PORT = 8000;
 
 // Define facility configurations
@@ -78,6 +78,11 @@ app.post("/book", (req, res) => {
   res.send(`Booked, Rs. ${cost}`);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(process.env.NODE_ENV)
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
+module.exports = { app, bookings }; // Exporting app and bookings object
