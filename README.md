@@ -11,5 +11,5 @@ https://adda-test.onrender.com
 
 ```bash
 npm install
----bash
+
 npm run book
