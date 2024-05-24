@@ -5,7 +5,8 @@ node.js, express.js,unit Test(jest)
 ## Deployed link
 https://adda-test.onrender.com/book
 ## Code checking in PostMan
-![Uploading image.png…]()
+![image](https://github.com/kkalyankumar9/adda_test/assets/112814583/c8f0abcc-37b0-4d36-b5bb-01202314367c)
+
 
 ![image](https://github.com/kkalyankumar9/adda_test/assets/112814583/06743f3b-634a-436f-8593-e167745a5042)
 
